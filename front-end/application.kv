@@ -1,0 +1,158 @@
+ScreenManager:
+    id: screen_manager
+    name: "screen_manager"
+    LoadingPage:
+        id: LoadingPage
+        name: "LoadingPage"
+        manager: screen_manager
+    HomePage:
+        id: HomePage
+        name: "HomePage"
+        manager: screen_manager
+    RecordPage:
+        id: RecordPage
+        name: "RecordPage"
+        manager: screen_manager
+    SummaryPage:
+        id: SummaryPage
+        name: "SummaryPage"
+        manager: screen_manager
+
+<LoadingPage>:
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+        Image:
+            source: 'static/logo.png'
+            size: 300, 227
+   
+<HomePage>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout: 
+            size_hint_y: None
+            height: 48
+            Label:
+                text: 'DÁTUM'
+                bold: True
+                color: 1,0.28,0.2,1
+                font_size: 18
+            Label:
+                text: 'ČAS'
+                bold: True
+                color: 1,0.28,0.2,1
+                font_size: 18
+            Label:
+                text: 'NAMERANÝ TLAK'
+                bold: True
+                color: 1,0.28,0.2,1
+                font_size: 18
+            Label:
+                text: ' '
+        ScrollView:
+            do_scroll_y: True
+            scroll_type: ['bars','content']
+            BoxLayout:
+                orientation: 'vertical'
+                id:scroll_box
+                size_hint_y: None
+        Button: 
+            text: "PRIDAŤ NOVÝ ZÁZNAM"
+            background_color: 1,0.28,0.2,1
+            background_normal: ""
+            font_size: 18
+            size_hint: 1, 0.1
+            on_press:
+                root.manager.current = 'RecordPage'
+                root.manager.transition.direction = 'up'     
+        Button: 
+            text: "ZOBRAZIŤ ŠTATISTIKU"
+            background_color: 255, 255, 255
+            background_normal: ""
+            font_size: 18
+            color: 1,0.28,0.2,1
+            size_hint: 1, 0.1
+            on_press:
+                root.manager.current = 'SummaryPage'
+                root.manager.transition.direction = 'up'
+                
+<RecordPage>:
+    GridLayout:
+        cols: 2
+        Label:
+            text: 'DÁTUM MERANIA'
+            font_size: 20
+        TextInput:
+            id: date
+            font_size: 18
+            background_color: 1,1,1,1
+            cursor_color: 0, 0, 0, 1
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+        Label:
+            text: 'ČAS MERANIA'
+            font_size: 20
+        TextInput:
+            id: time
+            font_size: 18
+            background_color: 1,1,1,1
+            cursor_color: 0, 0, 0, 1
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+        Label:
+            text: 'NAMERANÝ TLAK'
+            font_size: 20
+        TextInput:
+            id: pressure
+            font_size: 18
+            background_color: 1,1,1,1
+            cursor_color: 0, 0, 0, 1
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+        Button: 
+            text: "ULOŽIŤ ZÁZNAM"
+            bold: True
+            background_color: 1,0.28,0.2,1
+            background_normal: ""
+            font_size: 18
+            on_press:
+                root.save_data(date.text, time.text, pressure.text)
+        BoxLayout:
+            orientation: 'vertical'
+            Button: 
+                text: "SPÄŤ NA DOMOV"
+                color: 1,0.28,0.2,1
+                background_color: 255, 255, 255
+                font_size: 18
+                on_press:
+                    root.load_home_page()
+            Button: 
+                text: "VYČISTIŤ FORMULÁR"
+                color: 1,0.28,0.2,1
+                background_color: 255, 255, 255
+                font_size: 18
+                on_press:
+                    root.reset_form()
+                    
+<SummaryPage>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout
+            orientation: 'vertical'
+            Label: 
+                text: 'PRIEMERNÁ HODNOTA TLAKU'
+                font_size: 46
+            Label:
+                id: pressure_value
+                text: root.avg_pressure()
+                font_size: 66
+        BoxLayout:
+            id: graph
+            padding: (0,0,0,40)
+        Button:           
+            text: "SPÄŤ NA DOMOV"
+            background_color: 1,0.28,0.2,1
+            background_normal: ""
+            font_size: 18
+            size_hint: 1, 0.3
+            on_press:
+                root.manager.current = 'HomePage'
+                root.manager.transition.direction = 'down'
+                
